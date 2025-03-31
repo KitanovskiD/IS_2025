@@ -7,7 +7,7 @@
 <div class="container">
 
     <div class="row">
-        <a class="btn btn-success" asp-action="Create">Insert New Product</a>
+        <a class="btn btn-success" style="width:200px; margin-left:28px" asp-action="Create">Insert New Product</a>
     </div>
 
     @for (int i = 0; i < Model.Count; i++)
@@ -19,7 +19,7 @@
             @:<div class="row">
         }
 
-                <div class="col-lg-4 m-2">
+                <div class="col-3 m-3">
 
                     <div class="card" style="width: 20rem; height: 30rem;">
                         <img class="card-img-top" src="@item.ProductImage" style="height: 50%;" alt="Image for product!">

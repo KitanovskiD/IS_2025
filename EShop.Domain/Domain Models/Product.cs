@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace EShop.Domain.Domain_Models
 {
-    public class Product
+    public class Product : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
         [Required]
         public string? ProductName { get; set; }
         [Required]
