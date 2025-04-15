@@ -10,6 +10,7 @@ using EShop.Service.Interface;
 using Microsoft.CodeAnalysis;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using EShop.Domain.DTO;
 
 namespace EShop.Web.Controllers
 {
@@ -111,19 +112,32 @@ namespace EShop.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
+
+        //public IActionResult AddProductToCard(Guid id)
+        //{
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //    if (userId == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _productService.AddProductToSoppingCart(id, Guid.Parse(userId));
+        //    return RedirectToAction(nameof(Index));
+        //}
+
         public IActionResult AddProductToCard(Guid id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId == null)
-            {
-                return NotFound();
-            }
-
-            _productService.AddProductToSoppingCart(id, Guid.Parse(userId));
-            return RedirectToAction(nameof(Index));
+            AddToCartDTO model = _productService.GetSelectedShoppingCartProduct(id);
+            return View(model);
         }
 
+        [HttpPost]
+        public IActionResult AddProductToCard(AddToCartDTO model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            _productService.AddProductToSoppingCart(model.SelectedProductId, Guid.Parse(userId), model.Quantity);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

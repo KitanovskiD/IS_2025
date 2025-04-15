@@ -1,4 +1,5 @@
 ﻿using EShop.Domain.Domain_Models;
+using EShop.Domain.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace EShop.Service.Interface
         Product Insert(Product product);
         Product Update(Product product);
         Product DeleteById(Guid id);
-        void AddProductToSoppingCart(Guid id, Guid userId);
+        AddToCartDTO GetSelectedShoppingCartProduct(Guid id);
+        void AddProductToSoppingCart(Guid id, Guid userId, int quantity);
     }
 }

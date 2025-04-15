@@ -13,11 +13,28 @@ namespace EShop.Service.Implementation
 {
     public class ShoppingCartService : IShoppingCartService
     {
-        private readonly IRepository<ShoppingCart> _shoppingCartRepository; 
+        private readonly IRepository<ShoppingCart> _shoppingCartRepository;
+        private readonly IRepository<ProductInShoppingCart> _productInShoppingCartRepository;
 
-        public ShoppingCartService(IRepository<ShoppingCart> shoppingCartRepository)
+        public ShoppingCartService(IRepository<ShoppingCart> shoppingCartRepository, IRepository<ProductInShoppingCart> productInShoppingCartRepository)
         {
             _shoppingCartRepository = shoppingCartRepository;
+            _productInShoppingCartRepository = productInShoppingCartRepository;
+        }
+
+
+        public void DeleteProductFromShoppingCart(Guid productInShoppingCartId)
+        {
+            
+            var prodictInShoppingCart = _productInShoppingCartRepository.Get(selector: x => x,
+                                                                             predicate: x => x.Id.Equals(productInShoppingCartId));
+
+            if (prodictInShoppingCart == null)
+            {
+                throw new Exception("Product in shopping cart not found");
+            }
+
+            _productInShoppingCartRepository.Delete(prodictInShoppingCart);
         }
 
         public ShoppingCart? GetByUserId(Guid userId)

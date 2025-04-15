@@ -9,6 +9,7 @@ using EShop.Domain.Domain_Models;
 using EShop.Repository;
 using EShop.Service.Interface;
 using System.Security.Claims;
+using EShop.Service.Implementation;
 
 namespace EShop.Web.Controllers
 {
@@ -22,13 +23,21 @@ namespace EShop.Web.Controllers
         }
 
         // GET: ShoppingCarts
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userShoppingCart = _shoppingCartService.GetByUserIdWithIncludedPrducts(Guid.Parse(userId));
             return View(userShoppingCart);
         }
 
-      
+        public IActionResult Delete(Guid id)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            _shoppingCartService.DeleteProductFromShoppingCart(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

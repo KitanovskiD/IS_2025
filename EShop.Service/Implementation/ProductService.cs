@@ -1,4 +1,5 @@
 ﻿using EShop.Domain.Domain_Models;
+using EShop.Domain.DTO;
 using EShop.Repository.Interface;
 using EShop.Service.Interface;
 using System;
@@ -22,7 +23,7 @@ namespace EShop.Service.Implementation
             _shoppingCartService= shoppingCartService;
         }
 
-        public void AddProductToSoppingCart(Guid id, Guid userId)
+        public void AddProductToSoppingCart(Guid id, Guid userId, int quantity)
         {
             var shoppingCart = _shoppingCartService.GetByUserId(userId);
 
@@ -38,7 +39,7 @@ namespace EShop.Service.Implementation
                 throw new Exception("Product not found");
             }
 
-            UpdateCartItem(product, shoppingCart);
+            UpdateCartItem(product, shoppingCart, quantity);
 
         }
 
@@ -50,7 +51,7 @@ namespace EShop.Service.Implementation
                                                 && x.ProductId.ToString() == productId.ToString());
         }
 
-        private void UpdateCartItem(Product product, ShoppingCart shoppingCart)
+        private void UpdateCartItem(Product product, ShoppingCart shoppingCart, int quantity)
         {
             var existingProduct = GetProductInShoppingCart(product.Id, shoppingCart.Id);
 
@@ -63,14 +64,14 @@ namespace EShop.Service.Implementation
                     ShoppingCartId = shoppingCart.Id,
                     Product = product,
                     ShoppingCart = shoppingCart,
-                    Quantity = 1
+                    Quantity = quantity
                 };
 
                 _productInShoppingCartRepository.Insert(productInShoppingCart);
             }
             else
             {
-                existingProduct.Quantity++;
+                existingProduct.Quantity+=quantity;
                 _productInShoppingCartRepository.Update(existingProduct);
             }
         }
@@ -106,6 +107,20 @@ namespace EShop.Service.Implementation
         public Product Update(Product product)
         {
             return _productRepository.Update(product);
+        }
+
+        public AddToCartDTO GetSelectedShoppingCartProduct(Guid id)
+        {
+            var selectedProduct = GetById(id);
+
+            var addProductToCartModel = new AddToCartDTO
+            {
+                SelectedProductId = selectedProduct.Id,
+                SelectedProductName = selectedProduct.ProductName,
+                Quantity = 1
+            };
+
+            return addProductToCartModel;
         }
     }
 }
