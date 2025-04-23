@@ -29,6 +29,18 @@ namespace EShop.Repository.Implementation
             return entity;
         }
 
+        public List<T> InsertMany(List<T> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentNullException("entities");
+            }
+            entities.AddRange(entities);
+            _context.SaveChanges();
+            return entities;
+        }
+
+
         public T Update(T entity)
         {
             _context.Update(entity);

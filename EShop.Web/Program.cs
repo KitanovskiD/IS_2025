@@ -1,3 +1,4 @@
+using EShop.Domain.Email;
 using EShop.Domain.Identity_Models;
 using EShop.Repository;
 using EShop.Repository.Implementation;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -20,9 +23,11 @@ builder.Services.AddDefaultIdentity<EShopApplicationUser>(options => options.Sig
 
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.AddControllersWithViews();
 

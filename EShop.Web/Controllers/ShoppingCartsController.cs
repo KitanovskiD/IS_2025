@@ -39,5 +39,19 @@ namespace EShop.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult OrderNow()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if(userId == null)
+            {
+                throw new Exception("Log in");
+            }
+
+            _shoppingCartService.OrderProducts(Guid.Parse(userId));
+
+            return RedirectToAction("Index", "ShoppingCarts");
+        }
+
     }
 }
