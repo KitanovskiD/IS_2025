@@ -144,7 +144,7 @@ namespace EShop.Service.Implementation
 
             _shoppingCartRepository.Update(userCart);
 
-            _emailService.SendEmailAsync(emailMessage);
+    
 
             return true;
         }
